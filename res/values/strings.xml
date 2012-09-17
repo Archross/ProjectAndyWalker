@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, ProjecttActivity!</string>
+    <string name="app_name">ProjectAndyWalker : LocationSensitiveReminder</string>
+    <string-array name="category">
+        <item >School</item>
+        <item >Home</item>
+    </string-array>
+    <string name="strSelectedDate">Selected date =&gt; %s</string>
+
+</resources>

@@ -1,7 +1,9 @@
-package com.nattachai;
+package chula.reminder;
 
 import java.sql.Date;
 import java.util.Calendar;
+
+import chula.reminder.R;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;

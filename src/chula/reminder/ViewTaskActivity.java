@@ -1,7 +1,9 @@
-package com.nattachai;
+package chula.reminder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import chula.reminder.R;
 
 import android.app.Activity;
 import android.net.ParseException;

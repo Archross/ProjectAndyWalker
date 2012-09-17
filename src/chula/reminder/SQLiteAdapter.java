@@ -1,4 +1,4 @@
-package com.nattachai;
+package chula.reminder;
 
 import java.util.ArrayList;
 import java.util.Date;

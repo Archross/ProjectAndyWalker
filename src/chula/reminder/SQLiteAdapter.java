@@ -108,6 +108,10 @@ public class SQLiteAdapter {
 	public int deleteAll(){
 	return sqLiteDatabase.delete(MYTASK_TABLE, null, null);
 	}
+	
+	public void delete_byID(String dbname,int id){
+		 sqLiteDatabase.delete(dbname, KEY_ID+"="+id, null);
+	}
 
 	public Cursor queueAllTask(){
 	String[] columns = new String[]{KEY_ID, KEY_NAME,KEY_CATEGORY,KEY_COMMENT,KEY_DATE};

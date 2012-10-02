@@ -8,5 +8,6 @@
         <item >Home</item>
     </string-array>
     <string name="strSelectedDate">Selected date =&gt; %s</string>
+    <string name="add_category">Add new Category</string>
 
 </resources>

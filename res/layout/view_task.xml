@@ -22,13 +22,12 @@
         android:layout_height="wrap_content"
         android:text="Category :"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/vt_cat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="  cname"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+<Spinner
+        android:id="@+id/vt_catSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    
+  
 
     <TextView
         android:layout_width="wrap_content"
@@ -56,7 +55,5 @@
         android:text=" heh.. "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-   
-
-
+    
 </LinearLayout>

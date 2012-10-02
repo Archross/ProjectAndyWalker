@@ -14,19 +14,19 @@ public class Task  {
 
 		private String name;
 		private String comment;
-		private String category;
+		private int category;
 		private Date date;
 		private int id;
 		
 		
-		public Task(String n, String ct,String co, Date d){
+		public Task(String n, int ct,String co, Date d){
 			name=n;
 			category =ct;
 			setComment(co);
 			date = d;
 		}
 		
-		public Task(int id,String n, String ct,String co, Date d){
+		public Task(int id,String n, int ct,String co, Date d){
 			this.id=id;
 			name=n;
 			category =ct;
@@ -41,10 +41,10 @@ public class Task  {
 		public void setName(String name) {
 			this.name = name;
 		}
-		public String getCategory() {
+		public int getCategory() {
 			return category;
 		}
-		public void setCategory(String category) {
+		public void setCategory(int category) {
 			this.category = category;
 		}
 		public Date getDate() {

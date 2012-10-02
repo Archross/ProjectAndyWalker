@@ -32,9 +32,8 @@ public class ProjecttActivity extends Activity implements OnClickListener {
         setContentView(R.layout.main);
         cc = this;
         listContent = (ListView) findViewById(R.id.contentlist);
-        //setListView();
         mySQLiteAdapter = new SQLiteAdapter(this);
-        mySQLiteAdapter.openToRead();
+        mySQLiteAdapter.openToRead(mySQLiteAdapter.MYTASK_TABLE);
 
     //    Cursor cursor = mySQLiteAdapter.queueAll();
      //   startManagingCursor(cursor);
@@ -64,7 +63,7 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				 mySQLiteAdapter.openToWrite();
+				 mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYTASK_TABLE);
 			        mySQLiteAdapter.deleteAll();
 			        mySQLiteAdapter.close();
 			}

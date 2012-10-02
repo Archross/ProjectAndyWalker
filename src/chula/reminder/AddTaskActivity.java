@@ -1,18 +1,19 @@
 package chula.reminder;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import chula.reminder.R;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -21,18 +22,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 public class AddTaskActivity extends Activity {
 	 /** Called when the activity is first created. */
-	
+	private SQLiteAdapter mySQLiteAdapter ;
 	   private EditText mDateDisplay;
 	    private int mYear;
-	    private int mMonth;
-	    private int mDay;
+	    private int mDay,mMonth;
+	    private int mCategory;
 	    private Spinner categorySpinner;
-	    private String mName,mComment,mCategory;
+	    private String mName,mComment;
 	    static final int DATE_DIALOG_ID = 0;
 	    
  @Override
@@ -40,8 +41,8 @@ public class AddTaskActivity extends Activity {
      super.onCreate(savedInstanceState);
      setContentView(R.layout.add_task);
      final Context c = this;
-     
-     
+ 	mySQLiteAdapter = new SQLiteAdapter(c);
+ 	//addSomeCategory();
      categorySpinner = (Spinner) findViewById(R.id.at_spinner1);
      mDateDisplay =  (EditText) findViewById(R.id.at_addTime);
      Button add = (Button) findViewById(R.id.at_addButton);
@@ -59,9 +60,9 @@ public class AddTaskActivity extends Activity {
 			mComment = ((EditText)findViewById(R.id.at_addComment)).getText().toString();
 			((EditText)findViewById(R.id.at_addComment)).setText("");
 			Task a =new Task(mName,mCategory,mComment,new Date(mYear,mMonth,mDay));
-			SQLiteAdapter mySQLiteAdapter = new SQLiteAdapter(c);
-	       mySQLiteAdapter.openToWrite();
-	       mySQLiteAdapter.insert(a);
+		
+	       mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYTASK_TABLE);
+	       mySQLiteAdapter.insertTask(a);
 	        mySQLiteAdapter.close();
 			chageView();
 		}
@@ -91,23 +92,34 @@ public class AddTaskActivity extends Activity {
      updateDisplay();
  }
  
- final public void chageView(){
+ private void addSomeCategory() {
+	// TODO Auto-generated method stub
+	mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYCATEGORY_TABLE);
+	mySQLiteAdapter.insertCategory("Home");
+	mySQLiteAdapter.insertCategory("School");
+	mySQLiteAdapter.close();
+}
+
+final public void chageView(){
 	 Intent intent= new Intent(this,ProjecttActivity.class);
 		this.startActivity(intent);
  }
  
  private void setSpinner() {
 	// TODO Auto-generated method stub
-	 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-			  this, R.array.category, android.R.layout.simple_spinner_item );
-			adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
-	categorySpinner.setAdapter(adapter);
+	 mySQLiteAdapter.openToRead(mySQLiteAdapter.MYCATEGORY_TABLE);
+     //   startManagingCursor(cursor);
+	 ArrayList<String> cateList = mySQLiteAdapter.queueAllCategory();
+      
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
+        	(this,android.R.layout.simple_spinner_item, cateList);
+	categorySpinner.setAdapter(arrayAdapter);
 	categorySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
 				long id) {
 			// TODO Auto-generated method stub
-			mCategory = (String) categorySpinner.getItemAtPosition(pos);
+			mCategory = pos;
 		}
 
 		public void onNothingSelected(AdapterView<?> arg0) {
@@ -115,6 +127,8 @@ public class AddTaskActivity extends Activity {
 			
 		}
 	});
+	
+	 mySQLiteAdapter.close();
 }
 
 // updates the date in the TextView

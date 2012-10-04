@@ -1,11 +1,17 @@
 package chula.reminder;
 
 import java.util.ArrayList;
+
+import com.google.android.maps.GeoPoint;
+
 import chula.reminder.R;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -24,7 +30,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ProjecttActivity extends Activity implements OnClickListener {
+public class ProjecttActivity extends Activity implements OnClickListener,LocationListener {
 	public final int DELETE_ID = 0;
 	public final int DELETE_CAT_ID = 1;
 	public final int EDIT_CAT_ID = 2;
@@ -38,6 +44,7 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 	private ArrayList<String> nameList,categoryListName ;
 	private ArrayList<Category> categoryList ;
 	 private Dialog dlg,addCategory,editCategory;
+	 private Location currentLocation;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +64,6 @@ public class ProjecttActivity extends Activity implements OnClickListener {
         listContent.setOnItemClickListener(listItemListener);
         listContent.setOnCreateContextMenuListener(this);
        
-   
      
     }
     @Override
@@ -303,5 +309,30 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		Intent intent= new Intent(this,AddTaskActivity.class);
 		this.startActivity(intent);
+	}
+	public void onLocationChanged(Location arg0) {
+		// TODO Auto-generated method stub
+		currentLocation = arg0;
+		
+	}
+	
+	public float distanceInMeterFromHere(int lat,int lng){
+		Location b = new Location("");
+		b.setLatitude(lat/1e6);
+		b.setLongitude(lng/1e6);
+		return currentLocation.distanceTo(b);
+	}
+	
+	public void onProviderDisabled(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void onProviderEnabled(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+		// TODO Auto-generated method stub
+		
 	}
 }

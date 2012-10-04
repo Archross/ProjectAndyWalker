@@ -34,7 +34,8 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 	private  ListView listContent,categoryListView ;
 	private Context cc;
 	private  ArrayList<Task> taskList;
-	private ArrayAdapter<String> arrayAdapter,categoryAdapter;
+	private ArrayAdapter<String>categoryAdapter;
+	private SpecialAdapter arrayAdapter;
 	private ArrayList<String> nameList,categoryListName ;
 	private ArrayList<Category> categoryList ;
 	 private Dialog dlg,addCategory,editCategory;
@@ -49,7 +50,8 @@ public class ProjecttActivity extends Activity implements OnClickListener {
         mySQLiteAdapter = new SQLiteAdapter(this);
         nameList = fillData();
         fillCategory();
-        arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, nameList);
+       // arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, nameList);
+        arrayAdapter = new SpecialAdapter(this, nameList);
         listContent.setAdapter(arrayAdapter); 
         Button b = (Button) findViewById(R.id.m_button1);
         b.setOnClickListener(this);

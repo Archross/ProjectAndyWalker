@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -31,7 +32,7 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 	private ArrayAdapter<String> arrayAdapter,categoryAdapter;
 	private ArrayList<String> nameList ;
 	private ArrayList<String> categoryList ;
-	 private Dialog dlg;
+	 private Dialog dlg,addCategory;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,7 @@ public class ProjecttActivity extends Activity implements OnClickListener {
          return temp;
     }
     
+   
     private void fillCategory(){
     	mySQLiteAdapter.openToRead(mySQLiteAdapter.MYCATEGORY_TABLE);
         categoryList = mySQLiteAdapter.queueAllCategory();
@@ -108,6 +110,12 @@ public class ProjecttActivity extends Activity implements OnClickListener {
         dlg = new Dialog(cc);
 		dlg.setTitle("Filter by category");
 		dlg.setContentView(R.layout.category_list);
+		
+		addCategory = new Dialog(cc);
+		addCategory.setTitle("Enter new category name.");
+		addCategory.setContentView(R.layout.add_category_dialog);
+		
+		
 		 categoryListView =(ListView) dlg.findViewById(R.id.categoryList);
 		 categoryAdapter = new ArrayAdapter<String>(dlg.getContext(),android.R.layout.simple_list_item_1, categoryList);
 		 categoryListView.setAdapter(categoryAdapter);
@@ -119,8 +127,28 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 				//dlg.setTitle((String)categoryList.get(pos));
 				if(pos<categoryList.size()-1){
 					filterByCategory(pos);
+				}else if(pos==categoryList.size()-1){
+					categoryList.remove(pos);
+					addCategory.show();
 				}
 				dlg.dismiss();
+			}
+		});
+		 
+		 Button acb = (Button) addCategory.findViewById(R.id.addCategoryButton);
+		 acb.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYCATEGORY_TABLE);
+				 String newName =((AutoCompleteTextView)(addCategory.findViewById(R.id.addCategoryTxt))).getText().toString();
+				mySQLiteAdapter.insertCategory(newName);
+				categoryAdapter.add(newName);
+				addCategory.dismiss();
+				mySQLiteAdapter.close();
+				categoryList.add(getResources().getString(R.string.add_category));
+				
 			}
 		});
    }

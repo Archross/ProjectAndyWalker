@@ -138,7 +138,7 @@ public class ProjecttActivity extends Activity implements OnClickListener {
                		categoryAdapter.add(name);
                		categoryAdapter.add(getResources().getString(R.string.add_category));
                		categoryAdapter.notifyDataSetChanged();
-                   	
+                   	 
        				editCategory.dismiss();
        			}
        		});

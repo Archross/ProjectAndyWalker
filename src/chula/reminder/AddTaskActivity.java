@@ -114,10 +114,15 @@ final public void chageView(){
 	// TODO Auto-generated method stub
 	 mySQLiteAdapter.openToRead(mySQLiteAdapter.MYCATEGORY_TABLE);
      //   startManagingCursor(cursor);
-	 ArrayList<String> cateList = mySQLiteAdapter.queueAllCategory();
+	 ArrayList<Category> categoryList = mySQLiteAdapter.queueAllCategory();
+	 ArrayList<String> categoryNameList = new ArrayList<String>(10);
+	 for (int i = 0; i <categoryList.size(); i++) {
+		categoryNameList.add(categoryList.get(i).getName());
+	}
+	
       
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
-        	(this,android.R.layout.simple_spinner_item, cateList);
+        	(this,android.R.layout.simple_spinner_item, categoryNameList);
 	categorySpinner.setAdapter(arrayAdapter);
 	categorySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 

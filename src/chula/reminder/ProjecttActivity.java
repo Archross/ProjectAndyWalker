@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,19 +22,22 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ProjecttActivity extends Activity implements OnClickListener {
 	public final int DELETE_ID = 0;
-	public final int CATEGORY_FILTER_ID = 1;
-	public final int LOCATION_FILTER_ID= 2;
+	public final int DELETE_CAT_ID = 1;
+	public final int EDIT_CAT_ID = 2;
+	public final int CATEGORY_FILTER_ID = 10;
+	public final int LOCATION_FILTER_ID= 20;
 	private SQLiteAdapter mySQLiteAdapter;
 	private  ListView listContent,categoryListView ;
 	private Context cc;
 	private  ArrayList<Task> taskList;
 	private ArrayAdapter<String> arrayAdapter,categoryAdapter;
-	private ArrayList<String> nameList ;
-	private ArrayList<String> categoryList ;
-	 private Dialog dlg,addCategory;
+	private ArrayList<String> nameList,categoryListName ;
+	private ArrayList<Category> categoryList ;
+	 private Dialog dlg,addCategory,editCategory;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,20 +71,102 @@ public class ProjecttActivity extends Activity implements OnClickListener {
     		ContextMenuInfo menuInfo) {
     	// TODO Auto-generated method stub
     	super.onCreateContextMenu(menu, v, menuInfo);
-    	menu.add(0,DELETE_ID,0,"Delete");
+    	if(v.equals(listContent)){
+    		menu.add(0,DELETE_ID,0,"Delete");
+    	}else if(v.equals(categoryListView)){
+    		 MenuItem delete = menu.add("Delete");
+             MenuItem edit= menu.add("Edit");
+             edit.setIcon(android.R.drawable.ic_menu_upload); //adding icons
+             delete.setIcon(android.R.drawable.ic_menu_upload);
+             AdapterContextMenuInfo menuInfos = (AdapterContextMenuInfo) menuInfo;
+             final int pos = menuInfos.position;
+       
+             delete.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+            	
+            	mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYTASK_TABLE);
+        		for (int i = 0; i < taskList.size(); i++) {
+        			System.out.println("Category num ="+pos+", task cat num ="+taskList.get(i).getCategory());
+					if(taskList.get(i).getCategory()==pos){	
+						mySQLiteAdapter.delete_byID(mySQLiteAdapter.MYTASK_TABLE,taskList.get(i).getId());
+						String temp = taskList.get(i).getName();
+				    	arrayAdapter.remove(temp); 
+				    		
+					}
+				}  
+        		mySQLiteAdapter.close();
+        		mySQLiteAdapter.openToRead(mySQLiteAdapter.MYTASK_TABLE);
+        		taskList= mySQLiteAdapter.getTasKList();
+        		mySQLiteAdapter.close();
+        		arrayAdapter.notifyDataSetChanged();
+        		
+            	mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYCATEGORY_TABLE);
+        		mySQLiteAdapter.delete_byID(mySQLiteAdapter.MYCATEGORY_TABLE,categoryList.get(pos).getId());
+        		mySQLiteAdapter.close();
+        		String temp = categoryList.get(pos).getName();
+        		categoryList.remove(pos);
+        		categoryListName.remove(pos);
+        		categoryAdapter.remove(temp);
+        		categoryAdapter.notifyDataSetChanged();
+        		
+        		
+                return true;
+            }
+        });
+             
+        edit.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+        	
+            public boolean onMenuItemClick(MenuItem item) {
+            	((AutoCompleteTextView)(editCategory.findViewById(R.id.editCategoryTxt))).
+            	setText(categoryList.get(pos).getName());
+            	editCategory.show();
+            	Button ecb =  (Button) editCategory.findViewById(R.id.editCategoryButton);
+       		 ecb.setOnClickListener(new OnClickListener() {
+       			
+       			public void onClick(View v) {
+       				// TODO Auto-generated method stub
+       				int id = categoryList.get(pos).getId();
+       				String name = ((AutoCompleteTextView)(editCategory.findViewById(R.id.editCategoryTxt))).getText().toString();
+       				((AutoCompleteTextView)(editCategory.findViewById(R.id.editCategoryTxt))).setText("");
+       				mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYCATEGORY_TABLE);
+                   	mySQLiteAdapter.updateCategory(name, id);
+               		mySQLiteAdapter.close();
+               		String temp =categoryList.get(pos).getName();
+               		categoryList.get(pos).setName(name);
+               		categoryAdapter.remove(temp);
+               		categoryAdapter.remove(getResources().getString(R.string.add_category));
+               		categoryAdapter.add(name);
+               		categoryAdapter.add(getResources().getString(R.string.add_category));
+               		categoryAdapter.notifyDataSetChanged();
+                   	
+       				editCategory.dismiss();
+       			}
+       		});
+       		 
+                return true;
+            }
+        });
+    	}
     }
+    
+   
+    
+   
     
     @Override
     public boolean onContextItemSelected(MenuItem item) {
     	// TODO Auto-generated method stub
     	AdapterContextMenuInfo menuInfo = (AdapterContextMenuInfo) item.getMenuInfo();
+    	int pos;
+    	String temp;
     	switch(item.getItemId()){
+    		
     	case DELETE_ID : 
-    		int pos = menuInfo.position;
+    		pos = menuInfo.position;
     		mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYTASK_TABLE);
     		mySQLiteAdapter.delete_byID(mySQLiteAdapter.MYTASK_TABLE,taskList.get(pos).getId());
     		mySQLiteAdapter.close();
-    		String temp = taskList.get(pos).getName();
+    		 temp = taskList.get(pos).getName();
     		taskList.remove(pos);
     		arrayAdapter.remove(temp);
     		arrayAdapter.notifyDataSetChanged();
@@ -104,9 +191,12 @@ public class ProjecttActivity extends Activity implements OnClickListener {
     private void fillCategory(){
     	mySQLiteAdapter.openToRead(mySQLiteAdapter.MYCATEGORY_TABLE);
         categoryList = mySQLiteAdapter.queueAllCategory();
+        categoryListName = new ArrayList<String>(10); 
         mySQLiteAdapter.close();
-        
-        categoryList.add(getResources().getString(R.string.add_category));
+        for (int i = 0; i < categoryList.size(); i++) {
+ 			categoryListName.add(categoryList.get(i).getName());
+ 		}
+        categoryListName.add(getString(R.string.add_category));
         dlg = new Dialog(cc);
 		dlg.setTitle("Filter by category");
 		dlg.setContentView(R.layout.category_list);
@@ -115,9 +205,13 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 		addCategory.setTitle("Enter new category name.");
 		addCategory.setContentView(R.layout.add_category_dialog);
 		
+		editCategory = new Dialog(cc);
+		editCategory.setTitle("Enter edit category name.");
+		editCategory.setContentView(R.layout.edit_category_dialog);
 		
 		 categoryListView =(ListView) dlg.findViewById(R.id.categoryList);
-		 categoryAdapter = new ArrayAdapter<String>(dlg.getContext(),android.R.layout.simple_list_item_1, categoryList);
+		 
+		 categoryAdapter = new ArrayAdapter<String>(dlg.getContext(),android.R.layout.simple_list_item_1, categoryListName);
 		 categoryListView.setAdapter(categoryAdapter);
 		 categoryListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -125,16 +219,18 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 					long id) {
 				// TODO Auto-generated method stub
 				//dlg.setTitle((String)categoryList.get(pos));
-				if(pos<categoryList.size()-1){
+				if(pos<categoryListName.size()-1){
 					filterByCategory(pos);
-				}else if(pos==categoryList.size()-1){
-					categoryList.remove(pos);
+				}else if(pos==categoryListName.size()-1){
+					categoryListName.remove(pos);
 					addCategory.show();
 				}
 				dlg.dismiss();
 			}
 		});
-		 
+		 registerForContextMenu(categoryListView);
+		 categoryListView.setOnCreateContextMenuListener(this);
+		
 		 Button acb = (Button) addCategory.findViewById(R.id.addCategoryButton);
 		 acb.setOnClickListener(new OnClickListener() {
 			
@@ -145,14 +241,18 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 				 String newName =((AutoCompleteTextView)(addCategory.findViewById(R.id.addCategoryTxt))).getText().toString();
 				mySQLiteAdapter.insertCategory(newName);
 				categoryAdapter.add(newName);
+				((AutoCompleteTextView)(addCategory.findViewById(R.id.addCategoryTxt))).setText("");
 				addCategory.dismiss();
 				mySQLiteAdapter.close();
-				categoryList.add(getResources().getString(R.string.add_category));
+				categoryListName.add(getResources().getString(R.string.add_category));
 				
 			}
 		});
+		 
+		 
    }
     
+   
     private void filterByCategory(int pos) {
 		// TODO Auto-generated method stub
     	arrayAdapter.clear();

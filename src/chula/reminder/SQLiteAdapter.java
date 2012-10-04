@@ -11,8 +11,8 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteAdapter {
-	public static final String MYDATABASE_NAME = "MY_DATABASE_1";
-	public static final String MYTASK_TABLE = "MYTASK_TABLE";
+	public static final String MYDATABASE_NAME = "MY_DATABASE1";
+	public static final String MYTASK_TABLE = "MYTASK_TABLE1";
 	public static final String MYCATEGORY_TABLE = "MYCATEGORY_TABLE";
 	public static final int MYDATABASE_VERSION = 1;
 	public static final String KEY_ID = "_id";
@@ -20,6 +20,8 @@ public class SQLiteAdapter {
 	public static final String KEY_CATEGORY = "Category";
 	public static final String KEY_COMMENT = "Comment";
 	public static final String KEY_DATE = "Date";
+	public static final String KEY_LATITUDE = "Latitude";
+	public static final String KEY_LONGTITUDE = "Longtitude";
 
 
 	//create table MY_DATABASE (ID integer primary key, Content text not null);
@@ -29,7 +31,9 @@ public class SQLiteAdapter {
 	+ KEY_NAME + " text not null, "
 	+ KEY_CATEGORY + " integer not null, "
 	+ KEY_COMMENT + " text not null, "
-	+ KEY_DATE + " long not null);";
+	+ KEY_DATE + " long not null, "
+	+ KEY_LATITUDE + " integer not null, "
+	+ KEY_LONGTITUDE + " integer not null);";
 	
 	private static final String SCRIPT_CREATE_CATEGORY =
 			"create table " + MYCATEGORY_TABLE + " ("
@@ -68,7 +72,7 @@ public class SQLiteAdapter {
 	}
 	
 	public ArrayList<Task> getTasKList(){
-		String[] columns = new String[]{KEY_ID, KEY_NAME,KEY_CATEGORY,KEY_COMMENT,KEY_DATE};
+		String[] columns = new String[]{KEY_ID, KEY_NAME,KEY_CATEGORY,KEY_COMMENT,KEY_DATE,KEY_LATITUDE,KEY_LONGTITUDE};
 		Cursor cursor = sqLiteDatabase.query(MYTASK_TABLE, columns,
 		  null, null, null, null, null);
 		int iRow = cursor.getColumnIndex(KEY_ID);
@@ -76,10 +80,13 @@ public class SQLiteAdapter {
 		int iCategory = cursor.getColumnIndex(KEY_CATEGORY);
 		int iComment = cursor.getColumnIndex(KEY_COMMENT);
 		int iDate = cursor.getColumnIndex(KEY_DATE);
+		int iLong =  cursor.getColumnIndex(KEY_LONGTITUDE);
+		int iLa = cursor.getColumnIndex(KEY_LATITUDE);
 		ArrayList<Task> aTasks = new ArrayList<Task>(10);
 		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext()){
 			Date d = new Date( cursor.getLong(iDate));;
-			Task temp = new Task(cursor.getInt(iRow),cursor.getString(iName), cursor.getInt(iCategory), cursor.getString(iComment), d);
+			Task temp = new Task(cursor.getInt(iRow),cursor.getString(iName),
+					cursor.getInt(iCategory), cursor.getString(iComment), d,cursor.getInt(iLa),cursor.getInt(iLong));
 			aTasks.add(temp);
 		}
 		
@@ -92,6 +99,8 @@ public class SQLiteAdapter {
 		contentValues.put(KEY_CATEGORY, content.getCategory());
 		contentValues.put(KEY_COMMENT, content.getComment());
 		contentValues.put(KEY_DATE, content.getDate().getTime());
+		contentValues.put(KEY_LATITUDE, content.getLatitude());
+		contentValues.put(KEY_LONGTITUDE, content.getLongtitute());
 		return sqLiteDatabase.insert(MYTASK_TABLE, null, contentValues);
 		}
 	
@@ -112,7 +121,7 @@ public class SQLiteAdapter {
 	}
 
 	public Cursor queueAllTask(){
-	String[] columns = new String[]{KEY_ID, KEY_NAME,KEY_CATEGORY,KEY_COMMENT,KEY_DATE};
+	String[] columns = new String[]{KEY_ID, KEY_NAME,KEY_CATEGORY,KEY_COMMENT,KEY_DATE,KEY_LATITUDE,KEY_LONGTITUDE};
 	Cursor cursor = sqLiteDatabase.query(MYTASK_TABLE, columns,
 	  null, null, null, null, null);
 

@@ -17,21 +17,43 @@ public class Task  {
 		private int category;
 		private Date date;
 		private int id;
+		private int latitude;
+		private int longtitute;
 		
 		
-		public Task(String n, int ct,String co, Date d){
+		public Task(String n, int ct,String co, Date d,int la,int lo){
 			name=n;
 			category =ct;
 			setComment(co);
 			date = d;
+			latitude =la;
+			longtitute = lo;
 		}
 		
-		public Task(int id,String n, int ct,String co, Date d){
+		public int getLatitude() {
+			return latitude;
+		}
+
+		public void setLatitude(int latitude) {
+			this.latitude = latitude;
+		}
+
+		public int getLongtitute() {
+			return longtitute;
+		}
+
+		public void setLongtitute(int longtitute) {
+			this.longtitute = longtitute;
+		}
+
+		public Task(int id,String n, int ct,String co, Date d,int la,int lo){
 			this.id=id;
 			name=n;
 			category =ct;
 			setComment(co);
 			date = d;
+			latitude =la;
+			longtitute = lo;
 		}
 		
 		

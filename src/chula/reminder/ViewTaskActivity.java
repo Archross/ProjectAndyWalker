@@ -38,7 +38,10 @@ public class ViewTaskActivity extends Activity {
 	        //set value from intent
 	        nameView.setText(bundle.getString("name"));
 	       setSpinner(bundle.getInt("category"));
-	    	commentView.setText(bundle.getString("comment"));
+	       String commentTx = bundle.getString("comment")+", point = ("+bundle.getString("latitude")+","+
+	    		   bundle.getString("longtitude")+")";
+	    	//commentView.setText(bundle.getString("comment"));
+	       commentView.setText(commentTx);
 	    	Date d = new Date(bundle.getLong("date"));	    	
 	    	dateView.setText(dateToString(d));
 	        

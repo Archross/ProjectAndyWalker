@@ -84,7 +84,7 @@ public class AddTaskActivity extends MapActivity implements LocationListener {
 			((EditText)findViewById(R.id.at_addName)).setText("");
 			mComment = ((EditText)findViewById(R.id.at_addComment)).getText().toString();
 			((EditText)findViewById(R.id.at_addComment)).setText("");
-			Task a =new Task(mName,mCategory,mComment,new Date(mYear,mMonth,mDay));
+			Task a =new Task(mName,mCategory,mComment,new Date(mYear,mMonth,mDay),loc.getLatitudeE6(),loc.getLongitudeE6());
 		
 	       mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYTASK_TABLE);
 	       mySQLiteAdapter.insertTask(a);

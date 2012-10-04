@@ -293,6 +293,8 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 			intent.putExtra("category", temp.getCategory() );
 			intent.putExtra("comment", temp.getComment() );
 			intent.putExtra("date", temp.getDate().getTime() );
+			intent.putExtra("latitude", temp.getLatitude() );
+			intent.putExtra("longtitude", temp.getLongtitute() );
 			startActivity(intent);
 		}
 	};

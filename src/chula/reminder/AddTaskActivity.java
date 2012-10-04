@@ -4,8 +4,14 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
+import com.google.android.maps.Projection;
 
 import chula.reminder.R;
 
@@ -16,7 +22,13 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -28,7 +40,7 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
-public class AddTaskActivity extends MapActivity {
+public class AddTaskActivity extends MapActivity implements LocationListener {
 	 /** Called when the activity is first created. */
 	private SQLiteAdapter mySQLiteAdapter ;
 	   private EditText mDateDisplay;
@@ -38,7 +50,10 @@ public class AddTaskActivity extends MapActivity {
 	    private Spinner categorySpinner;
 	    private String mName,mComment;
 	    static final int DATE_DIALOG_ID = 0;
+	    private GeoPoint loc;
 	    private MapView gMap;
+	    private MyLocationOverlay locOverlay;	 
+	    
 	    
  @Override
  public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +68,11 @@ public class AddTaskActivity extends MapActivity {
      Button cancel = (Button) findViewById(R.id.at_cancelButton);
      gMap = (MapView) findViewById(R.id.gMap);
      gMap.setBuiltInZoomControls(true);
+     locOverlay = new MyLocationOverlay(this,gMap);
+     locOverlay.enableCompass();
+     locOverlay.enableMyLocation();
+     gMap.getOverlays().add(locOverlay);
+     
      //mPickDate = (Button) findViewById(R.id.at_button1);
      setSpinner();
      // add a click listener to the button
@@ -179,7 +199,42 @@ final public void chageView(){
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+		System.out.println(location);
+	}
+
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event)
+	{
+	    boolean result = super.dispatchTouchEvent(event);
+	    if (event.getAction() == MotionEvent.ACTION_UP){
+	    	Projection projection = gMap.getProjection();
+	    	int y = gMap.getHeight() / 2; 
+	    	int x = gMap.getWidth() / 2;
+
+	    	loc = projection.fromPixels(x, y);
+	    	Log.d("map",(String)loc.toString());
+	    }
+	    	
+	    return result;
+	}
  
 }

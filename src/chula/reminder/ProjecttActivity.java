@@ -37,7 +37,7 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 	private ArrayAdapter<String> arrayAdapter,categoryAdapter;
 	private ArrayList<String> nameList,categoryListName ;
 	private ArrayList<Category> categoryList ;
-	 private Dialog dlg,addCategory;
+	 private Dialog dlg,addCategory,editCategory;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,13 +74,14 @@ public class ProjecttActivity extends Activity implements OnClickListener {
     	if(v.equals(listContent)){
     		menu.add(0,DELETE_ID,0,"Delete");
     	}else if(v.equals(categoryListView)){
-    		 MenuItem delete = menu.add("delete");
-             MenuItem edit= menu.add("edit");
+    		 MenuItem delete = menu.add("Delete");
+             MenuItem edit= menu.add("Edit");
              edit.setIcon(android.R.drawable.ic_menu_upload); //adding icons
              delete.setIcon(android.R.drawable.ic_menu_upload);
              AdapterContextMenuInfo menuInfos = (AdapterContextMenuInfo) menuInfo;
              final int pos = menuInfos.position;
-        delete.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+       
+             delete.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
             	
             	mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYTASK_TABLE);
@@ -99,8 +100,6 @@ public class ProjecttActivity extends Activity implements OnClickListener {
         		mySQLiteAdapter.close();
         		arrayAdapter.notifyDataSetChanged();
         		
-        		
-            	
             	mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYCATEGORY_TABLE);
         		mySQLiteAdapter.delete_byID(mySQLiteAdapter.MYCATEGORY_TABLE,categoryList.get(pos).getId());
         		mySQLiteAdapter.close();
@@ -114,14 +113,39 @@ public class ProjecttActivity extends Activity implements OnClickListener {
                 return true;
             }
         });
+             
         edit.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+        	
             public boolean onMenuItemClick(MenuItem item) {
-            	
+            	((AutoCompleteTextView)(editCategory.findViewById(R.id.editCategoryTxt))).
+            	setText(categoryList.get(pos).getName());
+            	editCategory.show();
+            	Button ecb =  (Button) editCategory.findViewById(R.id.editCategoryButton);
+       		 ecb.setOnClickListener(new OnClickListener() {
+       			
+       			public void onClick(View v) {
+       				// TODO Auto-generated method stub
+       				int id = categoryList.get(pos).getId();
+       				String name = ((AutoCompleteTextView)(editCategory.findViewById(R.id.editCategoryTxt))).getText().toString();
+       				((AutoCompleteTextView)(editCategory.findViewById(R.id.editCategoryTxt))).setText("");
+       				mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYCATEGORY_TABLE);
+                   	mySQLiteAdapter.updateCategory(name, id);
+               		mySQLiteAdapter.close();
+               		String temp =categoryList.get(pos).getName();
+               		categoryList.get(pos).setName(name);
+               		categoryAdapter.remove(temp);
+               		categoryAdapter.remove(getResources().getString(R.string.add_category));
+               		categoryAdapter.add(name);
+               		categoryAdapter.add(getResources().getString(R.string.add_category));
+               		categoryAdapter.notifyDataSetChanged();
+                   	 
+       				editCategory.dismiss();
+       			}
+       		});
+       		 
                 return true;
             }
         });
-    		//menu.add(0,EDIT_CAT_ID,0,"Edit");
-			//menu.add(0,DELETE_CAT_ID,0,"Delete");
     	}
     }
     
@@ -181,6 +205,10 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 		addCategory.setTitle("Enter new category name.");
 		addCategory.setContentView(R.layout.add_category_dialog);
 		
+		editCategory = new Dialog(cc);
+		editCategory.setTitle("Enter edit category name.");
+		editCategory.setContentView(R.layout.edit_category_dialog);
+		
 		 categoryListView =(ListView) dlg.findViewById(R.id.categoryList);
 		 
 		 categoryAdapter = new ArrayAdapter<String>(dlg.getContext(),android.R.layout.simple_list_item_1, categoryListName);
@@ -213,12 +241,14 @@ public class ProjecttActivity extends Activity implements OnClickListener {
 				 String newName =((AutoCompleteTextView)(addCategory.findViewById(R.id.addCategoryTxt))).getText().toString();
 				mySQLiteAdapter.insertCategory(newName);
 				categoryAdapter.add(newName);
+				((AutoCompleteTextView)(addCategory.findViewById(R.id.addCategoryTxt))).setText("");
 				addCategory.dismiss();
 				mySQLiteAdapter.close();
 				categoryListName.add(getResources().getString(R.string.add_category));
 				
 			}
 		});
+		 
 		 
    }
     

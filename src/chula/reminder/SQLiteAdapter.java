@@ -60,14 +60,12 @@ public class SQLiteAdapter {
 	public void close(){
 	sqLiteHelper.close();
 	}
-/*
-	public long insert(String content){
-
-	ContentValues contentValues = new ContentValues();
-	contentValues.put(KEY_CONTENT, content);
-	return sqLiteDatabase.insert(MYTASK_TABLE, null, contentValues);
+	public void updateCategory(String name,int id){
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(KEY_NAME, name);
+		String where =KEY_ID + "=" + id  ;
+		sqLiteDatabase.update(MYCATEGORY_TABLE, contentValues, where, null);
 	}
-	*/
 	
 	public ArrayList<Task> getTasKList(){
 		String[] columns = new String[]{KEY_ID, KEY_NAME,KEY_CATEGORY,KEY_COMMENT,KEY_DATE};

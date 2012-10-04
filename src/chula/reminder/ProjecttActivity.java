@@ -44,6 +44,7 @@ public class ProjecttActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         cc = this;
+      
         listContent = (ListView) findViewById(R.id.contentlist);
         mySQLiteAdapter = new SQLiteAdapter(this);
         nameList = fillData();
@@ -52,17 +53,10 @@ public class ProjecttActivity extends Activity implements OnClickListener {
         listContent.setAdapter(arrayAdapter); 
         Button b = (Button) findViewById(R.id.m_button1);
         b.setOnClickListener(this);
-        Button d = (Button) findViewById(R.id.m_deleteall);
-        d.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				 mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYTASK_TABLE);
-			        mySQLiteAdapter.deleteAll();
-			        mySQLiteAdapter.close();
-			}
-		});
+       
         listContent.setOnItemClickListener(listItemListener);
         listContent.setOnCreateContextMenuListener(this);
+       
    
      
     }

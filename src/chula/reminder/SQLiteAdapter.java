@@ -121,19 +121,19 @@ public class SQLiteAdapter {
 	return cursor;
 	}
 	
-	public ArrayList<String> queueAllCategory(){
+	public ArrayList<Category> queueAllCategory(){
 		String[] columns = new String[]{KEY_ID, KEY_NAME};
 		Cursor cursor = sqLiteDatabase.query(MYCATEGORY_TABLE, columns,
 		  null, null, null, null, null);
 		int iRow = cursor.getColumnIndex(KEY_ID);
 		int iName = cursor.getColumnIndex(KEY_NAME);
-		ArrayList<String> aTasks = new ArrayList<String>(10);
+		ArrayList<Category> aCates = new ArrayList<Category>(10);
 		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext()){
-			String temp = cursor.getString(iName);
-			aTasks.add(temp);
+			Category temp = new Category( cursor.getInt(iRow),cursor.getString(iName));
+			aCates.add(temp);
 		}
 		
-		return aTasks;
+		return aCates;
 		}
 
 	public class SQLiteHelper extends SQLiteOpenHelper {
@@ -156,6 +156,11 @@ public class SQLiteAdapter {
 
 	}
 
+	}
+
+	public void delete_byCategory(String dbname, int category) {
+		// TODO Auto-generated method stub
+		sqLiteDatabase.delete(dbname, KEY_CATEGORY+"="+category, null);
 	}
 
 	}

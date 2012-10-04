@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+
 import chula.reminder.R;
 
 import android.app.Activity;
@@ -25,7 +28,7 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
-public class AddTaskActivity extends Activity {
+public class AddTaskActivity extends MapActivity {
 	 /** Called when the activity is first created. */
 	private SQLiteAdapter mySQLiteAdapter ;
 	   private EditText mDateDisplay;
@@ -35,6 +38,7 @@ public class AddTaskActivity extends Activity {
 	    private Spinner categorySpinner;
 	    private String mName,mComment;
 	    static final int DATE_DIALOG_ID = 0;
+	    private MapView gMap;
 	    
  @Override
  public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,8 @@ public class AddTaskActivity extends Activity {
      mDateDisplay =  (EditText) findViewById(R.id.at_addTime);
      Button add = (Button) findViewById(R.id.at_addButton);
      Button cancel = (Button) findViewById(R.id.at_cancelButton);
-
+     gMap = (MapView) findViewById(R.id.gMap);
+     gMap.setBuiltInZoomControls(true);
      //mPickDate = (Button) findViewById(R.id.at_button1);
      setSpinner();
      // add a click listener to the button
@@ -162,6 +167,12 @@ final public void chageView(){
 					mDay);
 		}
 		return null;
+	}
+
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	

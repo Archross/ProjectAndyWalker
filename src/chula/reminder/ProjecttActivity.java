@@ -378,9 +378,17 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 			startActivity(intent);
 		}
 	};
+	 private void addSomeCategory() {
+			// TODO Auto-generated method stub
+			mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYCATEGORY_TABLE);
+			mySQLiteAdapter.insertCategory("None");
+			mySQLiteAdapter.close();
+		}
 
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
+		 if(categoryList.size()==0)addSomeCategory();
+		 else if(categoryList.get(0).getName().equals("")) addSomeCategory();
 		Intent intent= new Intent(this,AddTaskActivity.class);
 		this.startActivity(intent);
 	}

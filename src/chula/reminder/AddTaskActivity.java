@@ -171,7 +171,8 @@ final public void chageView(){
 		categoryNameList.add(categoryList.get(i).getName());
 	}
 	 mySQLiteAdapter.close();
-	 if(categoryNameList.get(0).equals(""))addSomeCategory();
+	 if(null==categoryNameList)addSomeCategory();
+	 else if(categoryNameList.get(0).equals("")) addSomeCategory();
 	 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
         	(this,android.R.layout.simple_spinner_item, categoryNameList);

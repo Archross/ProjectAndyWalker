@@ -72,6 +72,7 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
      
     }
     private void setArrayAdapter(){
+    
     	 factors =new ArrayList<Factor>(10);
     	nameList = new ArrayList<String>(10);
     	for (int i = 0; i < taskList.size(); i++) {
@@ -81,7 +82,9 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
   					checkDistance(distanceInMeterFromHere(tmp.getLatitude(), tmp.getLongtitute()), tmp.getDate())));
 		}
     	 arrayAdapter = new SpecialAdapter(this, nameList,factors);
+    	 
          listContent.setAdapter(arrayAdapter); 
+         
     }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -144,11 +147,10 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
                		mySQLiteAdapter.close();
                		String temp =categoryList.get(pos).getName();
                		categoryList.get(pos).setName(name);
-               		categoryAdapter.remove(temp);
-               		categoryAdapter.remove(getResources().getString(R.string.all_category));
-               		categoryAdapter.remove(getResources().getString(R.string.add_category));
-               		
-               		categoryAdapter.add(name);
+               		categoryAdapter.clear();
+               		for (int i = 0; i < categoryList.size(); i++) {
+						categoryAdapter.add(categoryList.get(i).getName());
+					}
                		categoryAdapter.add(getResources().getString(R.string.all_category));
                		categoryAdapter.add(getResources().getString(R.string.add_category));
                		
@@ -293,9 +295,28 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 		 
 		 
    }
+	private void filterByLocation(){
+		arrayAdapter.clear();
+		arrayAdapter.notifyDataSetInvalidated();
+		 factors =new ArrayList<Factor>(10);
+	     	nameList = new ArrayList<String>(10);
+	     	for (int i = 0; i < taskList.size(); i++) {
+	     		 Task tmp =taskList.get(i);
+	     		 Factor temp =new Factor(checkDate(tmp.getDate()), 
+	      					checkDistance(distanceInMeterFromHere(tmp.getLatitude(), tmp.getLongtitute()), tmp.getDate()));
+	     		if(temp.isNow()){
+	     			nameList.add(tmp.getName());
+	     			factors.add(temp);
+	    		}
+	 		}
+	     	 arrayAdapter = new SpecialAdapter(this, nameList,factors);
+	          listContent.setAdapter(arrayAdapter); 
+	}
    
     private void filterByCategory(int pos) {
 		// TODO Auto-generated method stub
+    	arrayAdapter.clear();
+		arrayAdapter.notifyDataSetInvalidated();
     	 factors =new ArrayList<Factor>(10);
      	nameList = new ArrayList<String>(10);
      	for (int i = 0; i < taskList.size(); i++) {
@@ -327,6 +348,7 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 			dlg.show();
 			break;
 		case LOCATION_FILTER_ID:
+			filterByLocation();
 			break;
 
 		default:
@@ -371,7 +393,6 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 			System.out.println("Map current location= null");
 			LocationManager locmanager = (LocationManager) cc.getSystemService(LOCATION_SERVICE);
 			Location lastknownLocation =locmanager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-			while(true){
 				if(lastknownLocation!=null){
 					float distance =lastknownLocation.distanceTo(b);
 				System.out.println("Map b ="+b.getLatitude()+","+b.getLongitude());
@@ -379,8 +400,10 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 				
 				return distance/1000000;
 				}
+				return 0;
 			}
-		}
+	
+		
 		return currentLocation.distanceTo(b);
 	}
 	

@@ -12,7 +12,10 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class SpecialAdapter extends ArrayAdapter<String> {
-	private int[] colors = new int[] { 0x30FF0000, 0x300000FF };
+	private static final int TYPE_COUNT = 2;
+	private static final int TYPE_ITEM_RED = 1;
+	private static final int TYPE_ITEM_NORMAL = 0;
+	private static final int TYPE_ITEM_GREEN= 3;
 	
 	private List<Factor> factors;
 
@@ -20,21 +23,37 @@ public class SpecialAdapter extends ArrayAdapter<String> {
 	    super(context, android.R.layout.simple_list_item_1, objects);
 	    factors = f;
 	}
+	
+	@Override
+	public int getViewTypeCount() {
+	    return TYPE_COUNT;
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+
+	    if(factors.get(position).isLate())return TYPE_ITEM_RED;
+	    if(factors.get(position).isLate())return TYPE_ITEM_GREEN;
+	    
+	    return TYPE_ITEM_NORMAL;
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 	    View v = super.getView(position, convertView, parent);
 	    TextView textView=(TextView) v.findViewById(android.R.id.text1);
 	    textView.setTextColor(Color.BLACK);
-	    Factor factor=factors.get(position);
-	    if(factor.isLate()){
-	    	v.setBackgroundColor(Color.RED);
-	    }else if(factor.isNow()){
+	    switch (getItemViewType(position)) {
+	    case TYPE_ITEM_RED :
+	        v.setBackgroundColor(Color.RED);
+	        break;
+	    case TYPE_ITEM_NORMAL:
+	        break;
+	    case TYPE_ITEM_GREEN:
 	    	v.setBackgroundColor(Color.GREEN);
+	    	break;
 	    }
-	   // if (position == 0) {
-	    //    v.setBackgroundColor(Color.BLACK);
-	   // }
+	  
 	    return v;
 	}
 }

@@ -26,8 +26,7 @@ public class SpecialAdapter extends ArrayAdapter<String> {
 	    Factor factor=factors.get(position);
 	    if(factor.isLate()){
 	    	v.setBackgroundColor(Color.RED);
-	    }
-	    else if(factor.isNow()){
+	    }else if(factor.isNow()){
 	    	v.setBackgroundColor(Color.GREEN);
 	    }
 	   // if (position == 0) {

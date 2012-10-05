@@ -14,6 +14,8 @@ import com.google.android.maps.Projection;
 import chula.reminder.R;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ParseException;
 import android.os.Bundle;
@@ -21,8 +23,10 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -31,32 +35,34 @@ public class ViewTaskActivity extends MapActivity {
 	private TextView nameView;
 	private TextView commentView;
 	private TextView dateView;
-	 private Spinner categorySpinnerView;
+	private TextView categoryView;
 	 private SQLiteAdapter mySQLiteAdapter;
 	  private GeoPoint loc;
 	    private MapView gMap;
 	    private MyLocationOverlay locOverlay;	 
 	    private Itemization overlay;
-	 
+	 private Context c;
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
+	        c=this;
 	        setContentView(R.layout.view_task);
 	        mySQLiteAdapter = new SQLiteAdapter(this);
 	        Bundle bundle = this.getIntent().getExtras();
 	        //binding
 	        nameView = (TextView)findViewById(R.id.vt_name);
-	        categorySpinnerView = (Spinner)findViewById(R.id.vt_catSpinner);
+	        categoryView = (TextView) findViewById(R.id.vt_category);
 	        commentView = (TextView)findViewById(R.id.vt_comment);
 	        dateView = (TextView)findViewById(R.id.vt_date);
 	        
 	        //set value from intent
 	        nameView.setText(bundle.getString("name"));
+	        
 	       setSpinner(bundle.getInt("category"));
-	       String commentTx = bundle.getString("comment")+", point = ("+bundle.getInt("latitude")+","+
-	    		   bundle.getInt("longtitude")+")";
-	    	//commentView.setText(bundle.getString("comment"));
-	       commentView.setText(commentTx);
+	    /*   String commentTx = bundle.getString("comment")+", point = ("+bundle.getInt("latitude")+","+
+	    		   bundle.getInt("longtitude")+")";*/
+	    	commentView.setText(bundle.getString("comment"));
+	       //commentView.setText(commentTx);
 	    	Date d = new Date(bundle.getLong("date"));	    	
 	    	dateView.setText(dateToString(d));
 	        
@@ -75,6 +81,16 @@ public class ViewTaskActivity extends MapActivity {
 	    	 	 OverlayItem overlayitem = new OverlayItem(center,"Center","Center of the map");
 	    	 	 overlay.addOverlay(overlayitem);
 	    	 	 gMap.getOverlays().add(overlay);
+	    	 	 
+	    	 	 Button back = (Button) findViewById(R.id.vt_backbutton);
+	    	 	 back.setOnClickListener(new OnClickListener() {
+					
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						 Intent intent= new Intent(c,ProjecttActivity.class);
+						c.startActivity(intent);
+					}
+				});
 
 	    }
 	 
@@ -87,24 +103,9 @@ public class ViewTaskActivity extends MapActivity {
 		 for (int i = 0; i <categoryList.size(); i++) {
 			categoryNameList.add(categoryList.get(i).getName());
 		}
-	      
-	        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
-	        	(this,android.R.layout.simple_spinner_item, categoryNameList);
-		categorySpinnerView.setAdapter(arrayAdapter);
-		categorySpinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
-					long id) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		categorySpinnerView.setSelection(position);
+	     categoryView.setText(categoryNameList.get(position)); 
+	     
+		
 		 mySQLiteAdapter.close();
 	}
 

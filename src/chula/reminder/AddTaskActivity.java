@@ -27,6 +27,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -126,7 +127,24 @@ public class AddTaskActivity extends MapActivity implements LocationListener {
      mYear = ca.get(Calendar.YEAR);
      mMonth = ca.get(Calendar.MONTH);
      mDay = ca.get(Calendar.DAY_OF_MONTH);
-
+     
+     Button mapCurrent = (Button) findViewById(R.id.get_user_locbutton);
+    /* mapCurrent.setOnClickListener(new OnClickListener() {
+		
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			LocationManager locmanager = (LocationManager) c.getSystemService(LOCATION_SERVICE);
+			Location lastknownLocation =locmanager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			while(lastknownLocation==null){
+			}
+			 int lat = (int) (lastknownLocation.getLatitude() * 1E6);
+		     int lng = (int) (lastknownLocation.getLongitude() * 1E6);
+		     loc = new GeoPoint(lat, lng);
+		     Dialog d = new Dialog(c);
+		     d.setTitle("O");
+		     d.show();
+		}
+	});*/
      // display the current date (this method is below)
      updateDisplay();
  }

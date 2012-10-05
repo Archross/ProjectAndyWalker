@@ -205,9 +205,9 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
     	Calendar c1 = Calendar.getInstance();
     	Calendar c2 = Calendar.getInstance();
     	c2.setTime(date); // your date
-    	if (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
-    			  && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)){
-    	if(distanceInMeterFromHere<3000)return true;
+    	int year =  c2.get(Calendar.YEAR)-1900;
+    	if (c1.get(Calendar.YEAR) == year && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)){
+    		if(distanceInMeterFromHere<3000)return true;
     	}
 		return false;
 	}
@@ -303,7 +303,7 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
      		if(tmp.getCategory()==pos||pos==-1){
      			nameList.add(tmp.getName());
      			factors.add(new Factor(checkDate(tmp.getDate()), 
-       					true));
+      					checkDistance(distanceInMeterFromHere(tmp.getLatitude(), tmp.getLongtitute()), tmp.getDate())));
     		}
  		}
      	 arrayAdapter = new SpecialAdapter(this, nameList,factors);
@@ -371,12 +371,15 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 			System.out.println("Map current location= null");
 			LocationManager locmanager = (LocationManager) cc.getSystemService(LOCATION_SERVICE);
 			Location lastknownLocation =locmanager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-			if(lastknownLocation!=null){
-				System.out.println("Map ="+lastknownLocation.getLatitude()+","+lastknownLocation.getLongitude());
-				return lastknownLocation.distanceTo(b);
+			while(true){
+				if(lastknownLocation!=null){
+					float distance =lastknownLocation.distanceTo(b);
+				System.out.println("Map b ="+b.getLatitude()+","+b.getLongitude());
+				System.out.println("Map ="+lastknownLocation.getLatitude()+","+lastknownLocation.getLongitude()+",distane ="+distance);
+				
+				return distance/1000000;
+				}
 			}
-			System.out.println("Map lastknownlocation = null");
-			return 0;
 		}
 		return currentLocation.distanceTo(b);
 	}

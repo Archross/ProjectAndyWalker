@@ -1,6 +1,8 @@
 package chula.reminder;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.google.android.maps.GeoPoint;
 
@@ -44,6 +46,7 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 	private SpecialAdapter arrayAdapter;
 	private ArrayList<String> nameList,categoryListName ;
 	private ArrayList<Category> categoryList ;
+	private ArrayList<Factor> factors ;
 	 private Dialog dlg,addCategory,editCategory;
 	 private Location currentLocation;
     /** Called when the activity is first created. */
@@ -55,10 +58,12 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
       
         listContent = (ListView) findViewById(R.id.contentlist);
         mySQLiteAdapter = new SQLiteAdapter(this);
+        factors = new ArrayList<Factor>(10);
         nameList = fillData();
         fillCategory();
+       
        // arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, nameList);
-        arrayAdapter = new SpecialAdapter(this, nameList);
+        arrayAdapter = new SpecialAdapter(this, nameList,factors);
         listContent.setAdapter(arrayAdapter); 
         Button b = (Button) findViewById(R.id.m_button1);
         b.setOnClickListener(this);
@@ -93,6 +98,7 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 						mySQLiteAdapter.delete_byID(mySQLiteAdapter.MYTASK_TABLE,taskList.get(i).getId());
 						String temp = taskList.get(i).getName();
 				    	arrayAdapter.remove(temp); 
+				    	factors.remove(i);
 				    		
 					}
 				}  
@@ -170,6 +176,7 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
     		mySQLiteAdapter.close();
     		 temp = taskList.get(pos).getName();
     		taskList.remove(pos);
+    		factors.remove(pos);
     		arrayAdapter.remove(temp);
     		arrayAdapter.notifyDataSetChanged();
     		return true;
@@ -184,13 +191,45 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
          mySQLiteAdapter.close();
          ArrayList<String>temp = new ArrayList<String>(10);
          for (int i = 0; i < taskList.size(); i++) {
- 			temp.add(taskList.get(i).getName());
+        	 Task tmp =taskList.get(i);
+ 			temp.add(tmp.getName());
+ 			factors.add(new Factor(checkDate(tmp.getDate()), 
+ 					true));
+ 					//checkDistance(distanceInMeterFromHere(tmp.getLatitude(), tmp.getLongtitute()),tmp.getDate())));
  		}
          return temp;
     }
     
    
-    private void fillCategory(){
+    private boolean checkDistance(float distanceInMeterFromHere,Date date) {
+		// TODO Auto-generated method stub
+    	Calendar c1 = Calendar.getInstance();
+    	Calendar c2 = Calendar.getInstance();
+    	c2.setTime(date); // your date
+    	if (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
+    			  && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)){
+    	if(distanceInMeterFromHere<3000)return true;
+    	}
+		return false;
+	}
+	private boolean checkDate(Date date) {
+		// TODO Auto-generated method stub
+		Calendar c1 = Calendar.getInstance();//today
+    	Calendar c2 = Calendar.getInstance();
+    	c2.setTime(date); // your date
+    	System.out.println("Fuck2");
+    	if (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)){
+    		System.out.println("Fuck1");
+    		  if ((c1.get(Calendar.DAY_OF_YEAR)-c2.get(Calendar.DAY_OF_YEAR))>1){
+    		System.out.println("Fuck3");
+    		return true;
+    	}
+    	}
+    			
+    	
+		return false;
+	}
+	private void fillCategory(){
     	mySQLiteAdapter.openToRead(mySQLiteAdapter.MYCATEGORY_TABLE);
         categoryList = mySQLiteAdapter.queueAllCategory();
         categoryListName = new ArrayList<String>(10); 
@@ -254,6 +293,9 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 		 
    }
     
+	void removeTask(int pos){
+		
+	}
    
     private void filterByCategory(int pos) {
 		// TODO Auto-generated method stub
@@ -322,6 +364,7 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 		Location b = new Location("");
 		b.setLatitude(lat/1e6);
 		b.setLongitude(lng/1e6);
+		if(currentLocation==null)return 0;
 		return currentLocation.distanceTo(b);
 	}
 	

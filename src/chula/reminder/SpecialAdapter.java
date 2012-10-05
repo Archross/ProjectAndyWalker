@@ -13,19 +13,22 @@ import android.widget.SimpleAdapter;
 public class SpecialAdapter extends ArrayAdapter<String> {
 	private int[] colors = new int[] { 0x30FF0000, 0x300000FF };
 	
-	private List<String> mWeights;
+	private List<Factor> factors;
 
-	public SpecialAdapter(Context context, List<String> objects) {
+	public SpecialAdapter(Context context, List<String> objects,List<Factor> f) {
 	    super(context, android.R.layout.simple_list_item_1, objects);
-	    mWeights = objects;
+	    factors = f;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 	    View v = super.getView(position, convertView, parent);
-	    if (position == 0) {
-	        v.setBackgroundColor(Color.BLACK);
-	    }
+	    Factor factor=factors.get(position);
+	    if(factor.isLate())v.setBackgroundColor(Color.RED);
+	    else if(factor.isNow())v.setBackgroundColor(Color.GREEN);
+	   // if (position == 0) {
+	    //    v.setBackgroundColor(Color.BLACK);
+	   // }
 	    return v;
 	}
 }

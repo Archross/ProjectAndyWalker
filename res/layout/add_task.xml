@@ -2,10 +2,12 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
+         android:background="@color/cream"
         android:layout_height="fill_parent" >
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+     android:background="@color/cream"
     android:orientation="vertical" >
 
     <TextView
@@ -13,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Task Name : "
+         android:textColor="@color/black"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 		<EditText
         android:id="@+id/at_addName"
@@ -24,6 +27,7 @@
 		 <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+         android:textColor="@color/black"
         android:text="Choose Category :"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -35,6 +39,7 @@
 		 <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+         android:textColor="@color/black"
         android:text="Choose Date : "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -52,6 +57,7 @@
 		 <TextView
 		             android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+         android:textColor="@color/black"
 		         android:id="@+id/textView1"
 		         android:text="Where to remind?" />
 		 <RelativeLayout
@@ -75,6 +81,7 @@
 		 <TextView
 		     android:layout_width="wrap_content"
 		     android:layout_height="wrap_content"
+		      android:textColor="@color/black"
 		     android:text="Comment :"
 		     android:textAppearance="?android:attr/textAppearanceLarge" />
 		 

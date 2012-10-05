@@ -2,19 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/cream"
     android:orientation="vertical" >
   <Button
         android:id="@+id/m_button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Task" />
-    
+    
     <ListView
         android:id="@+id/contentlist"
-      android:layout_width="fill_parent"
-  android:layout_height="wrap_content" android:smoothScrollbar="true"
-  android:fastScrollEnabled="false"
-  android:layout_marginBottom="36dp">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:background="@color/cream"
+        android:fastScrollEnabled="false"
+        android:smoothScrollbar="true" >
         
     </ListView>
     

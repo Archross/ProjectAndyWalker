@@ -6,6 +6,8 @@
   <color name="grey">#FFF</color>
   <!-- A COLOR NAMED mycolor2 with value #00FFFFFF in #ARGB [A= ALPHA]value-->
   <color name="blue">#FF0000</color>
+   <color name="cream">#EFE4B0</color>
+     <color name="black">#000</color>
     
 
 </resources>

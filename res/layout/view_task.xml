@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/vt_scrollView1"
+        android:background="@color/cream"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cream"
     android:orientation="vertical" >
-
+
     <TextView
         android:id="@+id/vt_textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Task Name : "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black" />
+
 		<EditText
         android:id="@+id/vt_addName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint = "Enter your task's name here."
         android:ems="10" />
-		
+		
 		 <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Category :"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+		     android:layout_width="wrap_content"
+		     android:layout_height="wrap_content"
+		     android:text="Choose Category :"
+		     android:textAppearance="?android:attr/textAppearanceMedium"
+		      android:textColor="@color/black"
+		     android:textColorHint="@color/black" />
 
 		<Spinner
 		    android:id="@+id/vt_spinner1"
@@ -36,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Choose Date : "
+         android:textColor="@color/black"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 		 <EditText
@@ -52,6 +59,7 @@
 		 <TextView
 		             android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+         android:textColor="@color/black"
 		         android:text="Where to remind?" />
 		 <RelativeLayout
 		     android:layout_width="match_parent"
@@ -77,6 +85,7 @@
 		 <TextView
 		     android:layout_width="wrap_content"
 		     android:layout_height="wrap_content"
+		      android:textColor="@color/black"
 		     android:text="Comment :"
 		     android:textAppearance="?android:attr/textAppearanceLarge" />
 		 
@@ -89,15 +98,16 @@
     android:lines="5"
     android:layout_marginLeft="10dip"
     android:layout_marginRight="10dip" />
-
+
 		 <LinearLayout
 		     android:layout_width="match_parent"
 		     android:layout_height="wrap_content" >
-
+
 		     <Button
 		         android:id="@+id/vt_okButton"
 		         android:layout_width="wrap_content"
 		         android:layout_height="wrap_content"
+		         android:layout_weight="0.00"
 		         android:text="OK" />
 
 		     <Button
@@ -105,7 +115,6 @@
 		         android:layout_width="wrap_content"
 		         android:layout_height="wrap_content"
 		         android:text="Cancel" />
-
 		 </LinearLayout>
 
 </LinearLayout>

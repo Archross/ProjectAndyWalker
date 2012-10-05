@@ -21,6 +21,8 @@
         android:id="@+id/at_addName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:hint = "Enter your task's name here."
         android:ems="10" />
 		

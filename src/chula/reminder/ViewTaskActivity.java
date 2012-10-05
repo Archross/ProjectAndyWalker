@@ -126,6 +126,7 @@ public class ViewTaskActivity extends MapActivity {
 	 
 	 private void setsomething() {
 		// TODO Auto-generated method stub
+		 
 		  Bundle bundle = this.getIntent().getExtras();
 		  Date d = new Date(bundle.getLong("date"));
 		  Calendar cal = Calendar.getInstance();

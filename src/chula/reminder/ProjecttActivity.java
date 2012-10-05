@@ -94,14 +94,18 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
     	if(v.equals(listContent)){
     		menu.add(0,DELETE_ID,0,"Delete");
     	}else if(v.equals(categoryListView)){
+    		AdapterContextMenuInfo menuInfos = (AdapterContextMenuInfo) menuInfo;
+    		 final int pos = menuInfos.position;
+    		 if(pos==categoryListName.size()-1||pos==categoryListName.size()-2)return ;
     		 MenuItem delete = menu.add("Delete");
              MenuItem edit= menu.add("Edit");
              edit.setIcon(android.R.drawable.ic_menu_upload); //adding icons
              delete.setIcon(android.R.drawable.ic_menu_upload);
-             AdapterContextMenuInfo menuInfos = (AdapterContextMenuInfo) menuInfo;
-             final int pos = menuInfos.position;
+             
+            
        
              delete.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            	 
             public boolean onMenuItemClick(MenuItem item) {
             	
             	mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYTASK_TABLE);

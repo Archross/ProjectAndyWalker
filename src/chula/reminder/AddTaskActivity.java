@@ -69,6 +69,7 @@ public class AddTaskActivity extends MapActivity implements LocationListener {
  	//addSomeCategory();
      categorySpinner = (Spinner) findViewById(R.id.at_spinner1);
      mDateDisplay =  (EditText) findViewById(R.id.at_addTime);
+     mDateDisplay.setKeyListener(null);
      Button add = (Button) findViewById(R.id.at_addButton);
      Button cancel = (Button) findViewById(R.id.at_cancelButton);
      gMap = (MapView) findViewById(R.id.gMap);
@@ -128,7 +129,6 @@ public class AddTaskActivity extends MapActivity implements LocationListener {
      mMonth = ca.get(Calendar.MONTH);
      mDay = ca.get(Calendar.DAY_OF_MONTH);
      
-     Button mapCurrent = (Button) findViewById(R.id.get_user_locbutton);
     /* mapCurrent.setOnClickListener(new OnClickListener() {
 		
 		public void onClick(View v) {

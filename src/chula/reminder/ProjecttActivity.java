@@ -209,7 +209,7 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
     	c2.setTime(date); // your date
     	int year =  c2.get(Calendar.YEAR)-1900;
     	if (c1.get(Calendar.YEAR) == year && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)){
-    		if(distanceInMeterFromHere<3000)return true;
+    		if(distanceInMeterFromHere<5000)return true;
     	}
 		return false;
 	}
@@ -364,6 +364,7 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 			// TODO Auto-generated method stub
 			Intent intent= new Intent(cc,ViewTaskActivity.class);
 			Task temp =taskList.get(pos);
+			intent.putExtra("id", temp.getId() );
 			intent.putExtra("name", temp.getName() );
 			intent.putExtra("category", temp.getCategory() );
 			intent.putExtra("comment", temp.getComment() );
@@ -395,10 +396,10 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 			Location lastknownLocation =locmanager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 				if(lastknownLocation!=null){
 					float distance =lastknownLocation.distanceTo(b);
-				System.out.println("Map b ="+b.getLatitude()+","+b.getLongitude());
-				System.out.println("Map ="+lastknownLocation.getLatitude()+","+lastknownLocation.getLongitude()+",distane ="+distance);
+				//System.out.println("Map b ="+b.getLatitude()+","+b.getLongitude());
+				//System.out.println("Map ="+lastknownLocation.getLatitude()+","+lastknownLocation.getLongitude()+",distane ="+distance);
 				
-				return distance/1000000;
+				return distance;
 				}
 				return 0;
 			}

@@ -170,4 +170,18 @@ public class SQLiteAdapter {
 		sqLiteDatabase.delete(dbname, KEY_CATEGORY+"="+category, null);
 	}
 
+	public void updateTask(Task content, int id) {
+		// TODO Auto-generated method stub
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(KEY_NAME, content.getName());
+		contentValues.put(KEY_CATEGORY, content.getCategory());
+		contentValues.put(KEY_COMMENT, content.getComment());
+		contentValues.put(KEY_DATE, content.getDate().getTime());
+		contentValues.put(KEY_LATITUDE, content.getLatitude());
+		contentValues.put(KEY_LONGTITUDE, content.getLongtitute());
+		String where =KEY_ID + "=" + id  ;
+		sqLiteDatabase.update(MYTASK_TABLE, contentValues, where, null);
+		
+	}
+
 	}

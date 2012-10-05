@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/scrollView1"
+        android:id="@+id/vt_scrollView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,49 +9,49 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/vt_textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task name :"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/vt_name"
+        android:text="Task Name : "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+		<EditText
+        android:id="@+id/vt_addName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint = "Enter your task's name here."
+        android:ems="10" />
+		
+		 <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" name"
+        android:text="Choose Category :"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
+		<Spinner
+		    android:id="@+id/vt_spinner1"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content" />
+		
+		 <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Category :"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/vt_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Medium Text"
+        android:text="Choose Date : "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Date :"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+		 <EditText
+		     android:id="@+id/vt_addTime"
+		     android:layout_width="match_parent"
+		     android:layout_height="wrap_content"
+		     android:ems="10"
+		     android:inputType="date" >
 
-    <TextView
-        android:id="@+id/vt_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="some day"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+		     <requestFocus />
 
-    
-    <TextView
+		 </EditText>
+
+		 <TextView
 		             android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		         android:id="@+id/textView1"
 		         android:text="Where to remind?" />
 		 <RelativeLayout
 		     android:layout_width="match_parent"
@@ -60,7 +60,7 @@
 		     
 
 		     <com.google.android.maps.MapView
-		         android:id = "@+id/gMap"
+		         android:id = "@+id/vt_gMap"
 				 android:apiKey="@string/mapApiKey"
 		         android:clickable="True"
 		         android:layout_width="match_parent"
@@ -68,31 +68,45 @@
 		         android:focusableInTouchMode="True"
 		      />
 		 </RelativeLayout>
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Comment "
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/vt_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" heh.. "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/vt_backbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="BACK" />
 
-    </LinearLayout>
-    
+		
+		
+		 <TextView
+		     android:layout_width="wrap_content"
+		     android:layout_height="wrap_content"
+		     android:text="Comment :"
+		     android:textAppearance="?android:attr/textAppearanceLarge" />
+		 
+		 <EditText
+		      android:id="@+id/vt_addComment"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top"
+    android:singleLine="false"
+    android:lines="5"
+    android:layout_marginLeft="10dip"
+    android:layout_marginRight="10dip" />
+
+		 <LinearLayout
+		     android:layout_width="match_parent"
+		     android:layout_height="wrap_content" >
+
+		     <Button
+		         android:id="@+id/vt_okButton"
+		         android:layout_width="wrap_content"
+		         android:layout_height="wrap_content"
+		         android:text="OK" />
+
+		     <Button
+		         android:id="@+id/vt_cancelButton"
+		         android:layout_width="wrap_content"
+		         android:layout_height="wrap_content"
+		         android:text="Cancel" />
+
+		 </LinearLayout>
+
 </LinearLayout>
     </ScrollView>

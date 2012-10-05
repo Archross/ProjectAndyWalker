@@ -70,11 +70,7 @@
 		      />
 		 </RelativeLayout>
 
-		 <Button
-		     android:id="@+id/get_user_locbutton"
-		     android:layout_width="match_parent"
-		     android:layout_height="wrap_content"
-		     android:text="Get your current location" />
+		
 		
 		 <TextView
 		     android:layout_width="wrap_content"

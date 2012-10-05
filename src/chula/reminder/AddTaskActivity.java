@@ -152,8 +152,7 @@ public class AddTaskActivity extends MapActivity implements LocationListener {
  private void addSomeCategory() {
 	// TODO Auto-generated method stub
 	mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYCATEGORY_TABLE);
-	mySQLiteAdapter.insertCategory("Home");
-	mySQLiteAdapter.insertCategory("School");
+	mySQLiteAdapter.insertCategory("None");
 	mySQLiteAdapter.close();
 }
 
@@ -171,8 +170,9 @@ final public void chageView(){
 	 for (int i = 0; i <categoryList.size(); i++) {
 		categoryNameList.add(categoryList.get(i).getName());
 	}
-	
-      
+	 mySQLiteAdapter.close();
+	 if(categoryNameList.get(0).equals(""))addSomeCategory();
+	 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
         	(this,android.R.layout.simple_spinner_item, categoryNameList);
 	categorySpinner.setAdapter(arrayAdapter);
@@ -190,7 +190,7 @@ final public void chageView(){
 		}
 	});
 	
-	 mySQLiteAdapter.close();
+	 
 }
 
 // updates the date in the TextView

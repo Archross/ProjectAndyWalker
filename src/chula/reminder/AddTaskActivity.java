@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -53,7 +54,10 @@ public class AddTaskActivity extends MapActivity implements LocationListener {
 	    private GeoPoint loc;
 	    private MapView gMap;
 	    private MyLocationOverlay locOverlay;	 
+	    private Itemization overlay;
 	    
+	    static int MARKER_WIDTH = 30;
+	    static int MARKDER_HEIGHT = 50;
 	    
  @Override
  public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,16 @@ public class AddTaskActivity extends MapActivity implements LocationListener {
      locOverlay.enableCompass();
      locOverlay.enableMyLocation();
      gMap.getOverlays().add(locOverlay);
+     Drawable drawable = this.getResources().getDrawable(R.drawable.marker1);
+     overlay = new Itemization(drawable,this);
+     Projection projection = gMap.getProjection();
+ 	int y = gMap.getHeight() / 2; 
+ 	int x = gMap.getWidth() / 2;
+ 	 GeoPoint center = projection.fromPixels(x, y);
+ 	 OverlayItem overlayitem = new OverlayItem(center,"Center","Center of the map");
+ 	 overlay.addOverlay(overlayitem);
+ 	 gMap.getOverlays().add(overlay);
+
      
      //mPickDate = (Button) findViewById(R.id.at_button1);
      setSpinner();
@@ -231,7 +245,15 @@ final public void chageView(){
 	    	int x = gMap.getWidth() / 2;
 
 	    	loc = projection.fromPixels(x, y);
-	    	Log.d("map",(String)loc.toString());
+	    	gMap.getOverlays().clear();
+	    	 Drawable drawable = this.getResources().getDrawable(R.drawable.marker1);
+	 
+	         overlay = new Itemization(drawable,this);
+	     	 OverlayItem overlayitem = new OverlayItem(loc,"Center","Center of the map");
+	     	 overlay.addOverlay(overlayitem);
+	     	 gMap.getOverlays().add(overlay);
+		    gMap.postInvalidate();
+
 	    }
 	    	
 	    return result;

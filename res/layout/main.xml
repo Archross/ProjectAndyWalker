@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-     android:background="#fff"
     android:orientation="vertical" >
   <Button
         android:id="@+id/m_button1"
@@ -14,8 +13,6 @@
         android:id="@+id/contentlist"
       android:layout_width="fill_parent"
   android:layout_height="wrap_content" android:smoothScrollbar="true"
-  android:background="#ff6" 
-  android:textColor="#FF0000"
   android:fastScrollEnabled="false"
   android:layout_marginBottom="36dp">
         

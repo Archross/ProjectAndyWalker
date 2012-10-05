@@ -4,12 +4,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.OverlayItem;
+import com.google.android.maps.Projection;
+
 import chula.reminder.R;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.net.ParseException;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,12 +27,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class ViewTaskActivity extends Activity {
+public class ViewTaskActivity extends MapActivity {
 	private TextView nameView;
 	private TextView commentView;
 	private TextView dateView;
 	 private Spinner categorySpinnerView;
 	 private SQLiteAdapter mySQLiteAdapter;
+	  private GeoPoint loc;
+	    private MapView gMap;
+	    private MyLocationOverlay locOverlay;	 
+	    private Itemization overlay;
+	 
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
@@ -45,6 +60,22 @@ public class ViewTaskActivity extends Activity {
 	    	Date d = new Date(bundle.getLong("date"));	    	
 	    	dateView.setText(dateToString(d));
 	        
+	    	  gMap = (MapView) findViewById(R.id.gMap);
+	    	     gMap.setBuiltInZoomControls(true);
+	    	     locOverlay = new MyLocationOverlay(this,gMap);
+	    	     locOverlay.enableCompass();
+	    	     locOverlay.enableMyLocation();
+	    	     gMap.getOverlays().add(locOverlay);
+	    	     Drawable drawable = this.getResources().getDrawable(R.drawable.marker1);
+	    	     overlay = new Itemization(drawable,this);
+	    	     Projection projection = gMap.getProjection();
+	    	 	int y = gMap.getHeight() / 2; 
+	    	 	int x = gMap.getWidth() / 2;
+	    	 	 GeoPoint center = projection.fromPixels(x, y);
+	    	 	 OverlayItem overlayitem = new OverlayItem(center,"Center","Center of the map");
+	    	 	 overlay.addOverlay(overlayitem);
+	    	 	 gMap.getOverlays().add(overlay);
+
 	    }
 	 
 	 private void setSpinner(int position) {
@@ -89,4 +120,35 @@ public class ViewTaskActivity extends Activity {
 		return null;  
 		 
 	}
+
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event)
+	{
+	    boolean result = super.dispatchTouchEvent(event);
+	    if (event.getAction() == MotionEvent.ACTION_UP){
+	    	Projection projection = gMap.getProjection();
+	    	int y = gMap.getHeight() / 2; 
+	    	int x = gMap.getWidth() / 2;
+
+	    	loc = projection.fromPixels(x, y);
+	    	gMap.getOverlays().clear();
+	    	 Drawable drawable = this.getResources().getDrawable(R.drawable.marker1);
+	 
+	         overlay = new Itemization(drawable,this);
+	     	 OverlayItem overlayitem = new OverlayItem(loc,"Center","Center of the map");
+	     	 overlay.addOverlay(overlayitem);
+	     	 gMap.getOverlays().add(overlay);
+		    gMap.postInvalidate();
+
+	    }
+	    return result;
+
+	}
 }
+

@@ -24,8 +24,12 @@ public class SpecialAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 	    View v = super.getView(position, convertView, parent);
 	    Factor factor=factors.get(position);
-	    if(factor.isLate())v.setBackgroundColor(Color.RED);
-	    else if(factor.isNow())v.setBackgroundColor(Color.GREEN);
+	    if(factor.isLate()){
+	    	v.setBackgroundColor(Color.RED);
+	    }
+	    else if(factor.isNow()){
+	    	v.setBackgroundColor(Color.GREEN);
+	    }
 	   // if (position == 0) {
 	    //    v.setBackgroundColor(Color.BLACK);
 	   // }

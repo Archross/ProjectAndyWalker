@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -58,13 +59,10 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
       
         listContent = (ListView) findViewById(R.id.contentlist);
         mySQLiteAdapter = new SQLiteAdapter(this);
-        factors = new ArrayList<Factor>(10);
-        nameList = fillData();
+        fillData();
         fillCategory();
-       
-       // arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, nameList);
-        arrayAdapter = new SpecialAdapter(this, nameList,factors);
-        listContent.setAdapter(arrayAdapter); 
+        setArrayAdapter();
+     
         Button b = (Button) findViewById(R.id.m_button1);
         b.setOnClickListener(this);
        
@@ -72,6 +70,18 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
         listContent.setOnCreateContextMenuListener(this);
        
      
+    }
+    private void setArrayAdapter(){
+    	 factors =new ArrayList<Factor>(10);
+    	nameList = new ArrayList<String>(10);
+    	for (int i = 0; i < taskList.size(); i++) {
+    		 Task tmp =taskList.get(i);
+			nameList.add(tmp.getName());
+			factors.add(new Factor(checkDate(tmp.getDate()), 
+  					checkDistance(distanceInMeterFromHere(tmp.getLatitude(), tmp.getLongtitute()), tmp.getDate())));
+		}
+    	 arrayAdapter = new SpecialAdapter(this, nameList,factors);
+         listContent.setAdapter(arrayAdapter); 
     }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -96,18 +106,13 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
         			System.out.println("Category num ="+pos+", task cat num ="+taskList.get(i).getCategory());
 					if(taskList.get(i).getCategory()==pos){	
 						mySQLiteAdapter.delete_byID(mySQLiteAdapter.MYTASK_TABLE,taskList.get(i).getId());
-						String temp = taskList.get(i).getName();
-				    	arrayAdapter.remove(temp); 
-				    	factors.remove(i);
-				    		
 					}
 				}  
         		mySQLiteAdapter.close();
         		mySQLiteAdapter.openToRead(mySQLiteAdapter.MYTASK_TABLE);
         		taskList= mySQLiteAdapter.getTasKList();
         		mySQLiteAdapter.close();
-        		arrayAdapter.notifyDataSetChanged();
-        		
+        		setArrayAdapter();
             	mySQLiteAdapter.openToWrite(mySQLiteAdapter.MYCATEGORY_TABLE);
         		mySQLiteAdapter.delete_byID(mySQLiteAdapter.MYCATEGORY_TABLE,categoryList.get(pos).getId());
         		mySQLiteAdapter.close();
@@ -117,13 +122,11 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
         		categoryAdapter.remove(temp);
         		categoryAdapter.notifyDataSetChanged();
         		
-        		
                 return true;
             }
         });
              
         edit.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-        	
             public boolean onMenuItemClick(MenuItem item) {
             	((AutoCompleteTextView)(editCategory.findViewById(R.id.editCategoryTxt))).
             	setText(categoryList.get(pos).getName());
@@ -142,9 +145,13 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
                		String temp =categoryList.get(pos).getName();
                		categoryList.get(pos).setName(name);
                		categoryAdapter.remove(temp);
+               		categoryAdapter.remove(getResources().getString(R.string.all_category));
                		categoryAdapter.remove(getResources().getString(R.string.add_category));
+               		
                		categoryAdapter.add(name);
+               		categoryAdapter.add(getResources().getString(R.string.all_category));
                		categoryAdapter.add(getResources().getString(R.string.add_category));
+               		
                		categoryAdapter.notifyDataSetChanged();
                    	 
        				editCategory.dismiss();
@@ -177,27 +184,19 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
     		 temp = taskList.get(pos).getName();
     		taskList.remove(pos);
     		factors.remove(pos);
-    		arrayAdapter.remove(temp);
-    		arrayAdapter.notifyDataSetChanged();
+    		setArrayAdapter();
     		return true;
     	}
     	
     	return super.onContextItemSelected(item);
     }
 
-    private ArrayList<String> fillData(){
+    private void fillData(){
     	 mySQLiteAdapter.openToRead(mySQLiteAdapter.MYTASK_TABLE);
          taskList = mySQLiteAdapter.getTasKList();
          mySQLiteAdapter.close();
-         ArrayList<String>temp = new ArrayList<String>(10);
-         for (int i = 0; i < taskList.size(); i++) {
-        	 Task tmp =taskList.get(i);
- 			temp.add(tmp.getName());
- 			factors.add(new Factor(checkDate(tmp.getDate()), 
- 					true));
- 					//checkDistance(distanceInMeterFromHere(tmp.getLatitude(), tmp.getLongtitute()),tmp.getDate())));
- 		}
-         return temp;
+       
+         return;
     }
     
    
@@ -217,16 +216,12 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 		Calendar c1 = Calendar.getInstance();//today
     	Calendar c2 = Calendar.getInstance();
     	c2.setTime(date); // your date
-    	System.out.println("Fuck2");
-    	if (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)){
-    		System.out.println("Fuck1");
-    		  if ((c1.get(Calendar.DAY_OF_YEAR)-c2.get(Calendar.DAY_OF_YEAR))>1){
-    		System.out.println("Fuck3");
+    	int year =c2.get(Calendar.YEAR)-1900;
+    	if(c1.get(Calendar.YEAR)>year)return true;
+    	if (c1.get(Calendar.YEAR) == year){
+    		  if ((c1.get(Calendar.DAY_OF_YEAR)-c2.get(Calendar.DAY_OF_YEAR))>30)
     		return true;
-    	}
-    	}
-    			
-    	
+    	} 
 		return false;
 	}
 	private void fillCategory(){
@@ -237,7 +232,9 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
         for (int i = 0; i < categoryList.size(); i++) {
  			categoryListName.add(categoryList.get(i).getName());
  		}
+        categoryListName.add(getString(R.string.all_category));
         categoryListName.add(getString(R.string.add_category));
+        
         dlg = new Dialog(cc);
 		dlg.setTitle("Filter by category");
 		dlg.setContentView(R.layout.category_list);
@@ -260,11 +257,13 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 					long id) {
 				// TODO Auto-generated method stub
 				//dlg.setTitle((String)categoryList.get(pos));
-				if(pos<categoryListName.size()-1){
+				if(pos<categoryListName.size()-2){
 					filterByCategory(pos);
 				}else if(pos==categoryListName.size()-1){
 					categoryListName.remove(pos);
 					addCategory.show();
+				}else if(pos==categoryListName.size()-2){
+					filterByCategory(-1);
 				}
 				dlg.dismiss();
 			}
@@ -285,28 +284,32 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 				((AutoCompleteTextView)(addCategory.findViewById(R.id.addCategoryTxt))).setText("");
 				addCategory.dismiss();
 				mySQLiteAdapter.close();
+				categoryListName.add(getResources().getString(R.string.all_category));
 				categoryListName.add(getResources().getString(R.string.add_category));
+				
 				
 			}
 		});
 		 
 		 
    }
-    
-	void removeTask(int pos){
-		
-	}
    
     private void filterByCategory(int pos) {
 		// TODO Auto-generated method stub
-    	arrayAdapter.clear();
-    	for(int i=0;i<taskList.size();i++){
-    		Task temp = taskList.get(i);
-    		if(temp.getCategory()==pos){
-    			arrayAdapter.add(temp.getName());
+    	 factors =new ArrayList<Factor>(10);
+     	nameList = new ArrayList<String>(10);
+     	for (int i = 0; i < taskList.size(); i++) {
+     		 Task tmp =taskList.get(i);
+     		if(tmp.getCategory()==pos||pos==-1){
+     			nameList.add(tmp.getName());
+     			factors.add(new Factor(checkDate(tmp.getDate()), 
+       					true));
     		}
-    	}
-		arrayAdapter.notifyDataSetChanged();
+ 		}
+     	 arrayAdapter = new SpecialAdapter(this, nameList,factors);
+          listContent.setAdapter(arrayAdapter); 
+    	
+    
 	}
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -360,11 +363,21 @@ public class ProjecttActivity extends Activity implements OnClickListener,Locati
 		
 	}
 	
-	public float distanceInMeterFromHere(int lat,int lng){
+	private float distanceInMeterFromHere(int lat,int lng){
 		Location b = new Location("");
 		b.setLatitude(lat/1e6);
 		b.setLongitude(lng/1e6);
-		if(currentLocation==null)return 0;
+		if(currentLocation==null){
+			System.out.println("Map current location= null");
+			LocationManager locmanager = (LocationManager) cc.getSystemService(LOCATION_SERVICE);
+			Location lastknownLocation =locmanager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			if(lastknownLocation!=null){
+				System.out.println("Map ="+lastknownLocation.getLatitude()+","+lastknownLocation.getLongitude());
+				return lastknownLocation.distanceTo(b);
+			}
+			System.out.println("Map lastknownlocation = null");
+			return 0;
+		}
 		return currentLocation.distanceTo(b);
 	}
 	
